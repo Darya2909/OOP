@@ -1,51 +1,74 @@
 ﻿#include <iostream>
 class Derivative {
 public:
-    Derivative(double x, double h = 0.001) : x(x), h(h) {}
+    virtual double function(double x) = 0;
+    virtual double derivative() = 0;
 
-    double function(double x) {
-        return pow(x, 2);
-    }
-protected:
-    double x;
-    double h;
 };
 
 class Right : public Derivative {
 public:
-    Right(double x, double h = 0.001) : Derivative(x, h) {}
+    Right(double x, double h = 0.001) : x(x), h(h) {}
 
-    double right() {
+        double function(double x) override {
+        return pow(x, 2);
+    }
+
+    double derivative() override {
         return (function(x + h) - function(x)) / h;
     }
+                
+private:
+    double x;
+    double h;
 
 };
 
 class Left : public Derivative {
 public:
-    Left (double x, double h = 0.001) : Derivative(x, h) {}
+    Left(double x, double h = 0.001) : x(x), h(h) {}
 
-    double left() {
+        double function(double x) override {
+        return pow(x, 2);
+    }
+
+    double derivative() override {
         return (function(x) - function(x - h)) / h;
     }
+
+private:
+    double x;
+    double h;
 
 };
 
 class Central : public Derivative {
 public:
-    Central(double x, double h = 0.001) : Derivative(x, h) {}
+    Central(double x, double h = 0.001) : x(x), h(h) {}
 
-    double central() {
+        double function(double x) override {
+        return pow(x, 2);
+    }
+
+    double derivative() override {
         return (function(x + h) - function(x - h)) / (2 * h);
     }
 
+private:
+    double x;
+    double h;
+
 };
+
 
 int main()
 {
     double x = 3;
-    Left f(x);
+    Derivative* f = new Left(x);
 
-    std::cout << f.left() << std::endl;    // 6.001
-}
+    std::cout << f->derivative() << std::endl;   
 
+    delete f;
+
+    return 0;
+};
